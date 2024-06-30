@@ -1,0 +1,10 @@
+# pyenv virtualenv
+.pyenv/
+
+.python-version
+
+logs/
+
+__pycache__/
+
+*.pyc
