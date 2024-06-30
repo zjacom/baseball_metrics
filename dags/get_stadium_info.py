@@ -42,6 +42,8 @@ dag = DAG(
     dag_id="get_stadium_info",
     start_date=datetime(2024, 3, 6, tzinfo=kst),
     schedule_interval="50 23 * * *",
+    max_active_runs=1,
+    depend_on_past=True,
     catchup=True,
 )
 
