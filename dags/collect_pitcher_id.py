@@ -12,11 +12,15 @@ pymysql.install_as_MySQLdb()
 
 import pytz
 
+kst = pendulum.timezone("Asia/Seoul")
+
+start_date = kst.convert(days_ago(1))
+
 # 스케줄러 DAG
 scheduler_dag = DAG(
     dag_id='schedule_collect_pitcher_id',
     schedule_interval='30 9 * * *',
-    start_date=days_ago(1),
+    start_date=start_date,
 )
 
 def convert_timedelta_to_time(delta):
@@ -38,10 +42,10 @@ def schedule_dynamic_dag():
 
     if result:
         for time in result:
-            exec_time = (datetime.combine(datetime.today(), convert_timedelta_to_time(time[0])) - timedelta(minutes=570)).time()
+            exec_time = (datetime.combine(datetime.today(), convert_timedelta_to_time(time[0])) - timedelta(minutes=30)).time()
 
             # 시간대를 포함한 aware datetime 객체 생성
-            aware_exec_time = datetime.combine(datetime.today(), exec_time).replace(tzinfo=pytz.UTC)
+            aware_exec_time = datetime.combine(datetime.today(), exec_time)
             
             # Dynamic DAG A 실행 예약
             schedule_dag_run('collect_pitcher_id', aware_exec_time)
