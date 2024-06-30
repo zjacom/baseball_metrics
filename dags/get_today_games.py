@@ -16,9 +16,11 @@ import logging
 
 kst = pendulum.timezone("Asia/Seoul")
 
+start_date = kst.convert(days_ago(1))
+
 dag = DAG(
     dag_id="get_today_games",
-    start_date=days_ago(1),
+    start_date=start_date,
     schedule_interval="0 9 * * *",
     catchup=False,
 )

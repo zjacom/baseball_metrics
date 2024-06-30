@@ -10,9 +10,11 @@ pymysql.install_as_MySQLdb()
 
 kst = pendulum.timezone("Asia/Seoul")
 
+start_date = kst.convert(days_ago(1))
+
 dag = DAG(
     dag_id="calculate_park_factor",
-    start_date=days_ago(1),
+    start_date=start_date,
     schedule_interval="0 4 * * *",
     catchup=False,
 )
