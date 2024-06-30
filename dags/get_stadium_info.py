@@ -43,7 +43,6 @@ dag = DAG(
     start_date=datetime(2024, 3, 6, tzinfo=kst),
     schedule_interval="50 23 * * *",
     max_active_runs=1,
-    depends_on_past=True,
     catchup=True,
 )
 
