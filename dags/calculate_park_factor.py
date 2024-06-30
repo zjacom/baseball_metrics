@@ -2,7 +2,7 @@ from airflow import DAG
 from airflow.operators.mysql_operator import MySqlOperator
 from airflow.operators.python import PythonOperator
 from airflow.providers.mysql.hooks.mysql import MySqlHook
-from datetime import datetime
+from airflow.utils.dates import days_ago
 
 import pendulum
 import pymysql
@@ -12,9 +12,8 @@ kst = pendulum.timezone("Asia/Seoul")
 
 dag = DAG(
     dag_id="calculate_park_factor",
-    start_date=datetime(2024, 6, 6, tzinfo=kst),
-    schedule_interval=None,
-    # schedule_interval="0 4 * * *",
+    start_date=days_ago(1),
+    schedule_interval="0 4 * * *",
     catchup=False,
 )
 

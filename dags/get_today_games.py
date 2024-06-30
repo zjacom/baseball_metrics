@@ -1,9 +1,10 @@
 from airflow import DAG
 from airflow.operators.mysql_operator import MySqlOperator
 from airflow.providers.mysql.hooks.mysql import MySqlHook
+from airflow.utils.dates import days_ago
 from airflow.operators.python import PythonOperator
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
+from datetime import timedelta
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -17,7 +18,7 @@ kst = pendulum.timezone("Asia/Seoul")
 
 dag = DAG(
     dag_id="get_today_games",
-    start_date=datetime(2024, 6, 6, tzinfo=kst),
+    start_date=days_ago(1),
     schedule_interval="0 9 * * *",
     catchup=False,
 )
