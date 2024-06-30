@@ -127,7 +127,7 @@ create_table = MySqlOperator(
     task_id='create_table',
     sql="""
         CREATE TABLE IF NOT EXISTS game_records (
-            date DATE,
+            game_date DATE,
             away_score INT,
             home_score INT,
             stadium VARCHAR(16)
