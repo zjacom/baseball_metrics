@@ -11,8 +11,6 @@ import logging
 import pymysql
 pymysql.install_as_MySQLdb()
 
-import pytz
-
 kst = pendulum.timezone("Asia/Seoul")
 
 start_date = kst.convert(days_ago(1))

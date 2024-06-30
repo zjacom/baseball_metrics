@@ -18,7 +18,7 @@ start_date = kst.convert(days_ago(1))
 scheduler_dag = DAG(
     dag_id='schedule_collect_hitter_id',
     schedule_interval='30 9 * * *',
-    start_date=days_ago(1),
+    start_date=start_date,
 )
 
 def convert_timedelta_to_time(delta):
