@@ -1,5 +1,6 @@
 from airflow import DAG
 from airflow.providers.mysql.hooks.mysql import MySqlHook
+from airflow.operators.mysql_operator import MySqlOperator
 from airflow.operators.python import PythonOperator
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -122,6 +123,20 @@ def _insert_data(**context):
     connection.close()
 
 
+create_table = MySqlOperator(
+    task_id='create_table',
+    sql="""
+        CREATE TABLE IF NOT EXISTS game_records (
+            date DATE,
+            away_score INT,
+            home_score INT,
+            stadium VARCHAR(16)
+        );
+    """,
+    mysql_conn_id='mysql_conn',
+    dag=dag,
+)
+
 get_recent_date = PythonOperator(
     task_id='get_recent_date',
     python_callable=_get_recent_date,
@@ -143,4 +158,4 @@ insert_data = PythonOperator(
     dag=dag
 )
 
-get_recent_date >> crawling >> insert_data 
+create_table >> get_recent_date >> crawling >> insert_data 
