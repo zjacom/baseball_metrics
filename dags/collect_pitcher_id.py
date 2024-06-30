@@ -6,6 +6,7 @@ from airflow.utils.dates import days_ago
 from datetime import datetime, timedelta, time
 from airflow.api.common.experimental.trigger_dag import trigger_dag
 
+import pendulum
 import logging
 import pymysql
 pymysql.install_as_MySQLdb()
