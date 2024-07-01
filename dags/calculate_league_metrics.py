@@ -1,6 +1,7 @@
 from airflow import DAG
 from airflow.providers.mysql.hooks.mysql import MySqlHook
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+from airflow.sensors.external_task_sensor import ExternalTaskSensor
 from airflow.operators.python import PythonOperator
 from datetime import datetime
 
@@ -33,6 +34,23 @@ def _insert_league_metrics():
     """
     hook.run(update_query)
 
+wait_for_pitcher_info = ExternalTaskSensor(
+        task_id='wait_for_pitcher_info',
+        external_dag_id='get_pitcher_info',
+        external_task_id='crawling',
+        execution_date_fn=lambda x: x,
+        mode='reschedule',
+        timeout=1800,
+    )
+
+wait_for_hitter_wRC = ExternalTaskSensor(
+    task_id='wait_for_hitter_wRC',
+    external_dag_id='calculate_hitter_wRC',
+    external_task_id='calculate_wRC',
+    execution_date_fn=lambda x: x,  # 동일한 execution_date 사용
+    mode='reschedule',
+    timeout=1800,
+)
 
 insert_league_metrics = PythonOperator(
     task_id='insert_league_metrics',
@@ -46,4 +64,4 @@ trigger_get_today_lineup = TriggerDagRunOperator(
     dag=dag
 )
 
-insert_league_metrics >> trigger_get_today_lineup
+[wait_for_pitcher_info, wait_for_hitter_wRC] >> insert_league_metrics >> trigger_get_today_lineup

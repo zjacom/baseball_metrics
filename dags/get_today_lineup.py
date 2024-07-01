@@ -20,7 +20,6 @@ dag = DAG(
     dag_id="get_today_lineup",
     start_date=datetime(2024, 6, 6, tzinfo=kst),
     schedule_interval=None,
-    # schedule_interval="20 3 * * *",
     catchup=False,
 )
 

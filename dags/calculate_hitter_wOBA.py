@@ -105,6 +105,7 @@ crawling = PythonOperator(
 trigger_calculate_hitter_wRC = TriggerDagRunOperator(
     task_id='trigger_calculate_hitter_wRC',
     trigger_dag_id='calculate_hitter_wRC',
+    execution_date='{{ execution_date }}',
     dag=dag
 )
 

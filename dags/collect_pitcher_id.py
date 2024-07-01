@@ -175,6 +175,7 @@ crawling = PythonOperator(
 trigger_get_pitcher_info = TriggerDagRunOperator(
     task_id='trigger_get_pitcher_info',
     trigger_dag_id='get_pitcher_info',
+    execution_date='{{ execution_date }}',
     dag=dag
 )
 

@@ -118,6 +118,7 @@ crawling = PythonOperator(
 trigger_calculate_hitter_wOBA = TriggerDagRunOperator(
     task_id='trigger_calculate_hitter_wOBA',
     trigger_dag_id='calculate_hitter_wOBA',
+    execution_date='{{ execution_date }}',
     dag=dag
 )
 

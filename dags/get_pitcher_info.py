@@ -1,6 +1,7 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.providers.mysql.hooks.mysql import MySqlHook
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from bs4 import BeautifulSoup
 from datetime import datetime
 from selenium import webdriver
@@ -69,4 +70,11 @@ crawling = PythonOperator(
     dag=dag
 )
 
-crawling
+trigger_calculate_league_metrics = TriggerDagRunOperator(
+    task_id='trigger_calculate_league_metrics',
+    trigger_dag_id='calculate_league_metrics',
+    execution_date='{{ execution_date }}',
+    dag=dag
+)
+
+crawling >> trigger_calculate_league_metrics
