@@ -12,10 +12,12 @@ import time
 hook = MySqlHook(mysql_conn_id='mysql_conn')
 
 kst = pendulum.timezone("Asia/Seoul")
+from airflow.utils.dates import days_ago
+start_date = kst.convert(days_ago(1))
 
 dag = DAG(
     dag_id="calculate_hitter_wRC",
-    start_date=datetime(2024, 3, 6, tzinfo=kst),
+    start_date=start_date,
     schedule_interval=None,
     catchup=False,
 )

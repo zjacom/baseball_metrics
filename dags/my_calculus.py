@@ -10,10 +10,12 @@ import pymysql
 pymysql.install_as_MySQLdb()
 
 kst = pendulum.timezone("Asia/Seoul")
+from airflow.utils.dates import days_ago
+start_date = kst.convert(days_ago(1))
 
 dag = DAG(
     dag_id="my_calculus2",
-    start_date=datetime(2024, 6, 6, tzinfo=kst),
+    start_date=start_date,
     schedule_interval=None,
     # schedule_interval="0 3 * * *",
     catchup=False,

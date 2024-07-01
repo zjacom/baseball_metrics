@@ -15,10 +15,12 @@ import time
 pymysql.install_as_MySQLdb()
 import logging
 kst = pendulum.timezone("Asia/Seoul")
+from airflow.utils.dates import days_ago
+start_date = kst.convert(days_ago(1))
 
 dag = DAG(
     dag_id="get_today_lineup",
-    start_date=datetime(2024, 6, 6, tzinfo=kst),
+    start_date=start_date,
     schedule_interval=None,
     catchup=False,
 )
