@@ -29,7 +29,7 @@ def convert_timedelta_to_time(delta):
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
     seconds = int(seconds % 60)
-    return datetime.time(hours, minutes, seconds)
+    return time(hours, minutes, seconds)
 
 
 def schedule_dynamic_dag():
@@ -40,8 +40,13 @@ def schedule_dynamic_dag():
 
     if result:
         for game_time in result:
-            exec_time = (datetime.combine(datetime.today(), convert_timedelta_to_time(game_time[0])) - timedelta(minutes=30))
-            schedule_dag_run('collect_hitter_id', exec_time)
+            exec_time = (datetime.combine(datetime.today(), convert_timedelta_to_time(game_time[0])) - timedelta(minutes=30)).time()
+
+            # 시간대를 포함한 aware datetime 객체 생성
+            aware_exec_time = datetime.combine(datetime.today(), exec_time).replace(tzinfo=kst)
+
+            # Dynamic DAG A 실행 예약
+            schedule_dag_run('collect_hitter_id', aware_exec_time)
 
 
 def schedule_dag_run(dag_id, execution_time):
@@ -65,7 +70,6 @@ schedule_collect_hitter_id_dag = PythonOperator(
 from airflow.operators.mysql_operator import MySqlOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -74,7 +78,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 import pendulum
 import pymysql
-import time
 pymysql.install_as_MySQLdb()
 
 kst = pendulum.timezone("Asia/Seoul")
