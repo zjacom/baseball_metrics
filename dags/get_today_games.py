@@ -21,7 +21,7 @@ start_date = kst.convert(days_ago(1))
 dag = DAG(
     dag_id="get_today_games",
     start_date=start_date,
-    schedule_interval="0 9 * * *",
+    schedule_interval="0 12 * * *",
     catchup=False,
 )
 hook = MySqlHook(mysql_conn_id='mysql_conn')

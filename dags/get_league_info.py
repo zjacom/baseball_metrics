@@ -18,7 +18,7 @@ start_date = kst.convert(days_ago(1))
 dag = DAG(
     dag_id="get_league_info",
     start_date=start_date,
-    schedule_interval=None,
+    schedule_interval="0 5 * * *",
     catchup=False,
 )
 hook = MySqlHook(mysql_conn_id='mysql_conn')
