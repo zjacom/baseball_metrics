@@ -83,6 +83,8 @@ import pendulum
 import pymysql
 pymysql.install_as_MySQLdb()
 
+import time as time_for_sleep
+
 kst = pendulum.timezone("Asia/Seoul")
 
 dag = DAG(
@@ -127,7 +129,7 @@ def _crawling():
             link = driver.find_element(By.CSS_SELECTOR, f'div.teams ul li[data-id="{link_id}"] a')
             link.click()
 
-            time.sleep(1)
+            time_for_sleep.sleep(1)
 
             WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, 'div.row'))
