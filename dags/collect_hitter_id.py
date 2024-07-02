@@ -39,8 +39,8 @@ def schedule_dynamic_dag():
     result = hook.get_records(query)
 
     if result:
-        for time in result:
-            exec_time = (datetime.combine(datetime.today(), convert_timedelta_to_time(time[0])) - timedelta(minutes=30))
+        for game_time in result:
+            exec_time = (datetime.combine(datetime.today(), convert_timedelta_to_time(game_time[0])) - timedelta(minutes=30))
             schedule_dag_run('collect_hitter_id', exec_time)
 
 
