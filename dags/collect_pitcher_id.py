@@ -30,7 +30,7 @@ def convert_timedelta_to_time(delta):
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
     seconds = int(seconds % 60)
-    return time(hours, minutes, seconds)
+    return datetime.time(hours, minutes, seconds)
 
 
 def schedule_dynamic_dag():
