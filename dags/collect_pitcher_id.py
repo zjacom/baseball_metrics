@@ -81,7 +81,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 import pendulum
 import pymysql
-import time
 pymysql.install_as_MySQLdb()
 
 kst = pendulum.timezone("Asia/Seoul")
