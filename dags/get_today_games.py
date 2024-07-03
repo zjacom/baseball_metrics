@@ -62,7 +62,7 @@ def _crawling(**context):
         korean_time = execution_date + timedelta(hours=9)
         today = korean_time.strftime('%m-%d')
         logging.info(execution_date)
-        logging.info(today)
+        logging.info(korean_time)
 
         flag = False
 
