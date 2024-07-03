@@ -61,7 +61,7 @@ insert_league_metrics = PythonOperator(
 
 trigger_get_today_lineup = TriggerDagRunOperator(
     task_id='trigger_get_today_lineup',
-    trigger_dag_id='my_calcget_today_lineupulus',
+    trigger_dag_id='get_today_lineup',
     dag=dag
 )
 
