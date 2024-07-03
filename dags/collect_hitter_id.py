@@ -17,7 +17,7 @@ start_date = kst.convert(days_ago(1))
 # 스케줄러 DAG
 scheduler_dag = DAG(
     dag_id='schedule_collect_hitter_id',
-    schedule_interval='30 9 * * *',
+    schedule_interval='30 12 * * *',
     start_date=start_date,
 )
 
