@@ -57,7 +57,7 @@ def _crawling(**context):
         li_elements = driver.find_elements(By.CSS_SELECTOR, 'ul.game-list-n > li')
 
         for li in li_elements:
-            if li.find("p", {"class" : "status"}).text == "경기취소":
+            if li.find("p", {"class" : "staus"}).text == "경기취소":
                 continue
             # 게임 센터에서 5개의 경기를 하나씩 클릭
             li.click()
