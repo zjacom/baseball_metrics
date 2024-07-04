@@ -59,7 +59,7 @@ def _crawling(**context):
 
         game_schedules = soup.find_all("tr")
         execution_date = context['execution_date']
-        korean_time = execution_date + timedelta(hours=9)
+        korean_time = execution_date + timedelta(hours=24)
         today = korean_time.strftime('%m-%d')
         logging.info(execution_date)
         logging.info(korean_time)
