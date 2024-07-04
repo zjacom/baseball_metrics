@@ -14,7 +14,7 @@ from airflow.utils.dates import days_ago
 start_date = kst.convert(days_ago(1))
 
 dag = DAG(
-    dag_id="my_calculus2",
+    dag_id="my_calculus",
     start_date=start_date,
     schedule_interval=None,
     # schedule_interval="0 3 * * *",
