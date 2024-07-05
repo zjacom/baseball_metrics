@@ -35,6 +35,7 @@ def _send_slack_alarm():
     row = cursor.fetchone()
     while row:
         game_time, away, home, away_ERAp, away_wRCp, home_ERAp, home_wRCp = row
+        game_time = game_time.strftime("%H:%M")
         if away_ERAp + away_wRCp > home_ERAp + home_wRCp:
             message = f"{game_time}분 {away} vs {home} 경기에서 {away}의 승리가 예상됩니다."
         else:
