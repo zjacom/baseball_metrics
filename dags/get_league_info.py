@@ -3,7 +3,9 @@ from airflow.operators.mysql_operator import MySqlOperator
 from airflow.providers.mysql.hooks.mysql import MySqlHook
 from airflow.operators.python import PythonOperator
 from bs4 import BeautifulSoup
-from datetime import datetime
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -41,14 +43,18 @@ def _crawling(**context):
         driver.get(url)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-    league_info = soup.find("div", {"class" : "sub-content"}).find("tfoot").find_all('td')
-    # 총 경기수, 총 타석수, 총 득점수
-    total_games, total_at_bats, total_score = int(league_info[2].text), int(league_info[3].text), int(league_info[5].text)
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="contents"]/div[2]'))
+        )
+        
+        league_info = soup.find("div", {"class" : "sub-content"}).find("tfoot").find_all('td')
+        # 총 경기수, 총 타석수, 총 득점수
+        total_games, total_at_bats, total_score = int(league_info[2].text), int(league_info[3].text), int(league_info[5].text)
 
-    task_instance = context['task_instance']
-    task_instance.xcom_push(key='total_games', value=total_games)
-    task_instance.xcom_push(key='total_at_bats', value=total_at_bats)
-    task_instance.xcom_push(key='total_score', value=total_score)
+        task_instance = context['task_instance']
+        task_instance.xcom_push(key='total_games', value=total_games)
+        task_instance.xcom_push(key='total_at_bats', value=total_at_bats)
+        task_instance.xcom_push(key='total_score', value=total_score)
 
 def _generate_sql(**context):
     task_instance = context['task_instance']
