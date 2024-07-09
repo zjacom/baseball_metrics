@@ -54,17 +54,18 @@ def _crawling(**context):
     with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
         url = 'https://www.koreabaseball.com/Schedule/GameCenter/Main.aspx'
         driver.get(url)
-        li_elements = driver.find_elements(By.CSS_SELECTOR, 'ul.game-list-n > li')
+        # li_elements = driver.find_elements(By.CSS_SELECTOR, 'ul.game-list-n > li')
+        soup2 = BeautifulSoup(driver.page_source, 'html.parser')
+        li_elements = soup2.select('ul.game-list-n > li')
 
         for li in li_elements:
-            # bs4 말고 다른 언어
-            # if li.find("p", {"class" : "staus"}).text == "경기취소":
-            #     continue
+            if li.find("p", {"class" : "staus"}).text == "경기취소":
+                continue
             # 게임 센터에서 5개의 경기를 하나씩 클릭
             li.click()
             soup = BeautifulSoup(driver.page_source, 'html.parser')
             
-            time.sleep(3)  # 추가 대기 시간을 설정하여 페이지가 완전히 로드되도록 함
+            time.sleep(1)  # 추가 대기 시간을 설정하여 페이지가 완전히 로드되도록 함
             
             soup = BeautifulSoup(driver.page_source, 'html.parser')
             pitchers = soup.find_all("span", {"class" : "name"})
