@@ -63,7 +63,6 @@ def _crawling(**context):
                 continue
             # 게임 센터에서 5개의 경기를 하나씩 클릭
             li.click()
-            soup = BeautifulSoup(driver.page_source, 'html.parser')
             
             time.sleep(1)  # 추가 대기 시간을 설정하여 페이지가 완전히 로드되도록 함
             

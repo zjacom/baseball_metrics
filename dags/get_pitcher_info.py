@@ -56,6 +56,9 @@ def _crawling():
 
             era = float(first_line[1].text)
 
+            if era == "-":
+                continue
+
             sql = """
             INSERT INTO pitcher_info (player_id, ERA) VALUES (%s, %s)
             ON DUPLICATE KEY UPDATE
