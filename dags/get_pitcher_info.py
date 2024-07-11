@@ -51,13 +51,11 @@ def _crawling():
             pitcher_info = soup.find('tbody')
             first_line = pitcher_info.find_all("td")
 
-            if first_line[0].text == "기록이 없습니다.":
+            if first_line[0].text == "기록이 없습니다." and first_line[0].text == "-":
                 continue
 
             era = float(first_line[1].text)
 
-            if era == "-":
-                continue
 
             sql = """
             INSERT INTO pitcher_info (player_id, ERA) VALUES (%s, %s)
