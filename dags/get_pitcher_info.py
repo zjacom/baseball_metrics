@@ -12,6 +12,8 @@ import pymysql
 import time
 pymysql.install_as_MySQLdb()
 
+import logging
+
 kst = pendulum.timezone("Asia/Seoul")
 from airflow.utils.dates import days_ago
 start_date = kst.convert(days_ago(1))
@@ -50,10 +52,15 @@ def _crawling():
 
             pitcher_info = soup.find('tbody')
             first_line = pitcher_info.find_all("td")
+            logging.info(first_line)
 
-            if first_line[0].text == "기록이 없습니다." and first_line[0].text == "-":
+            if first_line[0].text == "기록이 없습니다." or first_line[1].text == "-":
+                continue
+            
+            if len(first_line) < 2:
                 continue
 
+                
             era = float(first_line[1].text)
 
 
