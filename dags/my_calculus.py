@@ -35,14 +35,17 @@ def _query_view(**context):
             FROM today_lineup
             WHERE team = '{team}' AND position <> '선발 투수' AND metric IS NOT NULL;
             """
-        hitter_metric = hook.get_first(hitter_query)[0]
+        try:
+            hitter_metric = hook.get_first(hitter_query)[0]
+        except TypeError as e:
+            logging.info("오늘 경기에 해당 팀 정보는 없습니다.")
+            continue
 
         pitcher_query = f"""
             SELECT metric
             FROM today_lineup
             WHERE team = '{team}' AND position = '선발 투수' AND metric IS NOT NULL;
             """
-        logging.info(team)
         pitcher_metric = hook.get_first(pitcher_query)[0]
 
         execution_date = context["execution_date"]
