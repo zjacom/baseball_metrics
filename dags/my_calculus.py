@@ -7,10 +7,13 @@ from datetime import datetime, timedelta
 
 import pendulum
 import pymysql
+
 pymysql.install_as_MySQLdb()
+import logging
 
 kst = pendulum.timezone("Asia/Seoul")
 from airflow.utils.dates import days_ago
+
 start_date = kst.convert(days_ago(1))
 
 dag = DAG(
@@ -20,7 +23,7 @@ dag = DAG(
     # schedule_interval="0 3 * * *",
     catchup=False,
 )
-hook = MySqlHook(mysql_conn_id='mysql_conn')
+hook = MySqlHook(mysql_conn_id="mysql_conn")
 
 teams = ["두산", "LG", "KIA", "NC", "한화", "SSG", "삼성", "키움", "KT", "롯데"]
 
@@ -39,11 +42,12 @@ def _query_view(**context):
             FROM today_lineup
             WHERE team = '{team}' AND position = '선발 투수' AND metric IS NOT NULL;
             """
+        logging.info(team)
         pitcher_metric = hook.get_first(pitcher_query)[0]
 
-        execution_date = context['execution_date']
+        execution_date = context["execution_date"]
         korean_time = execution_date + timedelta(hours=9)
-        game_date = korean_time.strftime('%Y-%m-%d')
+        game_date = korean_time.strftime("%Y-%m-%d")
         if hitter_metric and pitcher_metric:
             update_sql = f"""
                 UPDATE today_games
@@ -70,17 +74,10 @@ def _query_view(**context):
             hook.run(update_sql)
 
 
-
-query_view = PythonOperator(
-    task_id='query_view',
-    python_callable=_query_view,
-    dag=dag
-)
+query_view = PythonOperator(task_id="query_view", python_callable=_query_view, dag=dag)
 
 trigger_send_slack_alarm = TriggerDagRunOperator(
-    task_id='trigger_send_slack_alarm',
-    trigger_dag_id='send_slack_alarm',
-    dag=dag
+    task_id="trigger_send_slack_alarm", trigger_dag_id="send_slack_alarm", dag=dag
 )
 
 query_view >> trigger_send_slack_alarm
