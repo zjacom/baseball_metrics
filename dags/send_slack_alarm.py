@@ -46,7 +46,7 @@ def _send_slack_alarm():
             else:
                 message = f"{game_time}분 {away} vs {home} 경기에서 {home}의 승리가 예상됩니다."
             send_message_to_a_slack_channel(message, ":scream:")
-            row = cursor.fetchone()
+        row = cursor.fetchone()
 
 
 send_slack_alarm = PythonOperator(
