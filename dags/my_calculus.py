@@ -35,11 +35,9 @@ def _query_view(**context):
             FROM today_lineup
             WHERE team = '{team}' AND position <> '선발 투수' AND metric IS NOT NULL;
             """
-        try:
-            hitter_metric = hook.get_first(hitter_query)[0]
-        except TypeError as e:
-            logging.info("오늘 경기에 해당 팀 정보는 없습니다.")
-            continue
+        hitter_metric = hook.get_first(hitter_query)
+        if hitter_metric is not None:
+            hitter_metric = hitter_metric[0]
 
         pitcher_query = f"""
             SELECT metric
@@ -47,34 +45,35 @@ def _query_view(**context):
             WHERE team = '{team}' AND position = '선발 투수' AND metric IS NOT NULL;
             """
         pitcher_metric = hook.get_first(pitcher_query)[0]
+        if pitcher_metric is not None:
+            pitcher_metric = pitcher_metric[0]
 
         execution_date = context["execution_date"]
         korean_time = execution_date + timedelta(hours=9)
         game_date = korean_time.strftime("%Y-%m-%d")
-        if hitter_metric and pitcher_metric:
-            update_sql = f"""
-                UPDATE today_games
-                SET 
-                    away_wRCp = CASE 
-                                    WHEN game_date = '{game_date}' AND away = '{team}' THEN {hitter_metric}
-                                    ELSE away_wRCp
-                                END,
-                    away_ERAp = CASE 
-                                    WHEN game_date = '{game_date}' AND away = '{team}' THEN {pitcher_metric}
-                                    ELSE away_ERAp
-                                END,
-                    home_wRCp = CASE 
-                                    WHEN game_date = '{game_date}' AND home = '{team}' THEN {hitter_metric}
-                                    ELSE home_wRCp
-                                END,
-                    home_ERAp = CASE 
-                                    WHEN game_date = '{game_date}' AND home = '{team}' THEN {pitcher_metric}
-                                    ELSE home_ERAp
-                                END
-                WHERE 
-                    game_date = '{game_date}' AND (away = '{team}' OR home = '{team}');
-                """
-            hook.run(update_sql)
+        update_sql = f"""
+            UPDATE today_games
+            SET 
+                away_wRCp = CASE 
+                                WHEN game_date = '{game_date}' AND away = '{team}' THEN {hitter_metric}
+                                ELSE away_wRCp
+                            END,
+                away_ERAp = CASE 
+                                WHEN game_date = '{game_date}' AND away = '{team}' THEN {pitcher_metric}
+                                ELSE away_ERAp
+                            END,
+                home_wRCp = CASE 
+                                WHEN game_date = '{game_date}' AND home = '{team}' THEN {hitter_metric}
+                                ELSE home_wRCp
+                            END,
+                home_ERAp = CASE 
+                                WHEN game_date = '{game_date}' AND home = '{team}' THEN {pitcher_metric}
+                                ELSE home_ERAp
+                            END
+            WHERE 
+                game_date = '{game_date}' AND (away = '{team}' OR home = '{team}');
+            """
+        hook.run(update_sql)
 
 
 query_view = PythonOperator(task_id="query_view", python_callable=_query_view, dag=dag)
