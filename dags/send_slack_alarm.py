@@ -40,16 +40,13 @@ def _send_slack_alarm():
     row = cursor.fetchone()
     while row:
         game_time, away, home, away_ERAp, away_wRCp, home_ERAp, home_wRCp = row
-        if away_ERAp + away_wRCp > home_ERAp + home_wRCp:
-            message = (
-                f"{game_time}분 {away} vs {home} 경기에서 {away}의 승리가 예상됩니다."
-            )
-        else:
-            message = (
-                f"{game_time}분 {away} vs {home} 경기에서 {home}의 승리가 예상됩니다."
-            )
-        send_message_to_a_slack_channel(message, ":scream:")
-        row = cursor.fetchone()
+        if away_ERAp and away_wRCp and home_ERAp and home_wRCp:
+            if away_ERAp + away_wRCp > home_ERAp + home_wRCp:
+                message = f"{game_time}분 {away} vs {home} 경기에서 {away}의 승리가 예상됩니다."
+            else:
+                message = f"{game_time}분 {away} vs {home} 경기에서 {home}의 승리가 예상됩니다."
+            send_message_to_a_slack_channel(message, ":scream:")
+            row = cursor.fetchone()
 
 
 send_slack_alarm = PythonOperator(
