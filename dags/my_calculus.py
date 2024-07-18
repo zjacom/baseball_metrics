@@ -36,6 +36,7 @@ def _query_view(**context):
             WHERE team = '{team}' AND position <> '선발 투수' AND metric IS NOT NULL;
             """
         hitter_metric = hook.get_first(hitter_query)
+        logging.info(hitter_metric)
         if hitter_metric is not None:
             hitter_metric = hitter_metric[0]
 
@@ -44,7 +45,7 @@ def _query_view(**context):
             FROM today_lineup
             WHERE team = '{team}' AND position = '선발 투수' AND metric IS NOT NULL;
             """
-        pitcher_metric = hook.get_first(pitcher_query)[0]
+        pitcher_metric = hook.get_first(pitcher_query)
         if pitcher_metric is not None:
             pitcher_metric = pitcher_metric[0]
 
