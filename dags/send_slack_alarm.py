@@ -40,14 +40,6 @@ def _send_slack_alarm():
     row = cursor.fetchone()
     while row:
         game_time, away, home, away_ERAp, away_wRCp, home_ERAp, home_wRCp = row
-        # MySQL TIME 데이터를 datetime.time 객체로 변환
-        game_time = datetime.time(
-            hour=game_time[0].hour,
-            minute=game_time[0].minute,
-            second=game_time[0].second,
-        )
-        # datetime.time 객체를 HH:MM 형식의 문자열로 변환
-        game_time_str = game_time.strftime("%H:%M")
         if away_ERAp + away_wRCp > home_ERAp + home_wRCp:
             message = (
                 f"{game_time}분 {away} vs {home} 경기에서 {away}의 승리가 예상됩니다."
